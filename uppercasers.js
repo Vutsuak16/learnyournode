@@ -5,9 +5,18 @@ const PORT=process.argv[2];
 
 //We need a function which handles requests and send response
 function handleRequest(request, response){
-    response.end('It Works!! Path Hit: ' + request.url);
+	if(request.method=='POST'){
+	var body = [];
+	request.on('data',function(chunk){
+		    body.push(chunk);
+		});
+    request.on('end',function(){   
+		body = Buffer.concat(body).toString();
+	});
+response.write(body);
+    response.end();
+	}
 }
-
 //Create a server
 var server = http.createServer(handleRequest);
 
