@@ -6,15 +6,12 @@ const PORT=process.argv[2];
 //We need a function which handles requests and send response
 function handleRequest(request, response){
 	if(request.method=='POST'){
-	var body = [];
-	request.on('data',function(chunk){
-		    body.push(chunk);
-		});
-    request.on('end',function(){   
-		body = Buffer.concat(body).toString();
-	});
-response.write(body);
-    response.end();
+	request.pipe(map(function (chunk) {
+    return chunk.toString().toUpperCase()
+  })).pipe(response)
+	}
+	else{
+		return res.end('send me a POST request\n')
 	}
 }
 //Create a server
